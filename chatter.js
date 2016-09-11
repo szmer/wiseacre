@@ -1,8 +1,16 @@
+function emptyObj (obj) {
+    for (var k in obj)
+        return false
+    return true
+}
+
 function makeRoom (match) { return ' '+match }
+function strTrim (str) { return str.trim() }
 function movePunctuation (str) { return str.replace(/[,:;()]/g, makeRoom) }
+function alignPunctuation (str) { return str.replace(/ [,:;()]/g, strTrim)}
 
 // repeat returns an array of the elem repeated times times.
-function repeat(elem, times) {
+function repeat (elem, times) {
     var ret = [ elem ]
     for(var i = 1; i < times; i++) ret.push( elem )
     return ret
@@ -37,14 +45,14 @@ function normalizeNGramEntry (entry, direction) {
     }
 }
 
-function NGramNode(form) {
+function NGramNode (form) {
     // Our probability of being in this state, given the previous state.
     this.prob = 0.0
 
     // From each of the core nodes in a n-gram model we have paths of n-1 next/previous states. In
     // the end states these variables should remain empty objects.
-    this.forw = {} // possible next states (i.e. words)
-    this.backw = {} // possible previous states (i.e. words)
+    this.forw = Object() // possible next states (i.e. words)
+    this.backw = Object() // possible previous states (i.e. words)
 }
 
 // nGrams return an object, where the labels are tokens which can be found in the textStr. To each
@@ -94,4 +102,74 @@ function nGrams (textStr, n) {
     }
 
     return ngrams
+}
+
+// chooseNext returns a key (word form) of the node leading in the desired direction which has the
+// highest value of the evaluateFunc (when applied to its prob property), The function returns an
+// empty string if the ngramEntry has no descendants.
+function chooseNext (ngramEntry, direction, evaluateFunc) {
+    var best_score = -Infinity
+    var winning_option = ''
+
+    for (var k in ngramEntry[direction]) {
+        // Keep the value of evaluateFunc, as it may change and/or be expensive.
+        var e = evaluateFunc(ngramEntry[direction][k].prob)
+        if (e > best_score) {
+            best_score = e
+            winning_option = k
+        }
+    }
+
+    return winning_option
+}
+
+// generateChain builds a chain of words in the desired direction, and returns them as an array (the
+// caller may want to reverse it if the direction is backwards), The chain is terminated if the
+// ngrams dictate the end of a sentence, or when max_len words are generated.
+function generateChain (ngrams, word, direction, max_len) {
+    var chain = []
+    var nextWord = word
+    var nextEntry = ngrams[word]
+    var counter = 0
+    while (nextWord != '.' && counter < max_len) {
+        counter ++
+        chain.push(nextWord)
+
+        if (emptyObj(nextEntry[direction]))
+            nextEntry = ngrams[nextWord]
+
+        nextWord = chooseNext(nextEntry, direction,
+                                   function(x){return x * (0.2+0.8*Math.random())})
+        nextEntry = nextEntry[direction][nextWord]
+    }
+    return chain
+}
+
+// cleanSentence throws away some incorrect punctuation from the beginning of the sentence string,
+// and ensures that the first letter is lowercase. Leading and trailing spaces are also removed.
+function cleanSentence(str) {
+    for(var i = 0; i < str.length; i++) {
+        var c = str.charAt(i)
+        // Remove the punctuation that shouldn't appear at the beginning of a sentence.
+        if(',:;.'.indexOf(c) != -1) {
+            str = str.substr(0, i) + str.substr(i+1)
+            i --
+        }
+        // Change the first lowercase letter to uppercase.
+        else if (c != c.toLocaleUpperCase()) {
+            str = str.substr(0, i) + c.toLocaleUpperCase() + str.substr(i+1)
+            break
+        }
+        // But break if the first letter is uppercase anyway.
+        if (c != c.toLocaleLowerCase())
+            break
+    }
+    return str.trim();
+}
+
+function generateSentence(ngrams, stemWord) {
+    var sent = generateChain(ngrams, stemWord, 'backw', 20).reverse()
+    sent = sent.concat( generateChain(ngrams, stemWord, 'forw', 20).slice(1) )
+    sent = alignPunctuation( sent.join(' ')+'.' )
+    return cleanSentence(sent)
 }

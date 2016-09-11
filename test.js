@@ -55,6 +55,12 @@ function tests () {
         "'multiple sentences'; var o = new nGrams('zyxyxy telefax. angh cdda! zyxyxy telefax angh.', 3); (o['zyxyxy'].forw['telefax'].forw['.'].prob == 0.5 && o['angh'].forw['cdda'].forw['.'].prob == 1.0)",
         "'n == 5'; var o = new nGrams('zyxyxy telefax. angh cdda! zyxyxy telefax angh.', 5); (o['cdda'].forw['.'].forw['.'].forw['.'].forw['.'].prob == 1.0)"
     ])
+    testFunc(cleanSentence, [
+        "cleanSentence('raging cockatrices') == 'Raging cockatrices'",
+        "cleanSentence('Evil mind flayers') == 'Evil mind flayers'",
+        "cleanSentence(',,: deadly soldier ants') == 'Deadly soldier ants'",
+        "cleanSentence(':,, ! :') == '!'"
+    ])
 }
 // Run them automatically:
 tests()
