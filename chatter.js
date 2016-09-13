@@ -16,6 +16,10 @@ function repeat (elem, times) {
     return ret
 }
 
+function tokenize (str) {
+    return movePunctuation(str).split(' ')
+}
+
 // updNGramEntry increases the probability of tokens[0] by addProb and passes the rest of the tokens
 // array (if tokens.slice(1).length > 0) to the recursive calls of updNGramEntry, moving in the
 // requested direction. Thus this function increases the probability of the main entry and frequen-
@@ -69,7 +73,7 @@ function nGrams (textStr, n) {
 
     var wordTotal = 0
     for (var s in sents) {
-        sent_tokens[s] = movePunctuation(sents[s]).split(' ')
+        sent_tokens[s] = tokenize(sents[s]) 
 
         wordTotal += sent_tokens[s].length
 
@@ -172,4 +176,29 @@ function generateSentence(ngrams, stemWord) {
     sent = sent.concat( generateChain(ngrams, stemWord, 'forw', 20).slice(1) )
     sent = alignPunctuation( sent.join(' ')+'.' )
     return cleanSentence(sent)
+}
+
+
+function generateResponse(ngrams, utterance) {
+    var tokens = tokenize(utterance)
+    var stem_word = tokens[Math.floor(Math.random() * utterance.length)]
+    while (! (stem_word in ngr)) {
+        stem_word = tokens[Math.floor(Math.random() * utterance.length)]
+    }
+    return generateSentence(ngrams, stem_word)
+}
+
+function queryHandler(event) {
+    if (event.keyCode != 13) // 'enter'
+        return
+    var utterance = event.target.value
+    if (utterance == '')
+        return
+    // (ngr is global)
+    document.getElementById('response').textContent = generateResponse(ngr, utterance)
+}
+
+ngr = Object()
+window.onload = function() {
+    ngr = nGrams(text, 6)
 }
