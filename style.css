@@ -1,0 +1,78 @@
+html, body {
+    background-color: #65C442;
+    height: 100%;
+    margin: 0em;
+    padding: 0em;
+}
+
+#sky-above {
+    /* flexibly adjust the div leaving some air for the machine box */
+    height: 60em;
+    max-height: 28%;
+
+    border-bottom-left-radius: 46%;
+    border-bottom-right-radius: 46%;
+    background-color: #96D4E4;
+}
+
+#robo-body {
+    margin-left: 12%;
+    width: 76%;
+    max-width: 60em;
+    height: 67%;
+    min-height: 28em;
+
+    margin-top: -5%;
+
+    background-color: #dddddd;
+
+    border-top-left-radius: 10%;
+    border-top-right-radius: 5%;
+    border-bottom-right-radius: 7%;
+
+    border-right: 5.6em solid #cccccc;
+    border-top: 2.8em solid #cecece;
+    
+    padding-top: 1.3%;
+}
+
+.robo-eye {
+    width: 37%;
+    height: 45%;
+    border-radius: 20%;
+    min-width: 11.3em;
+
+    background-color: #fefefe;
+    border-right: 1em solid #fafafa;
+    border-bottom: 1em solid #fafafa;
+}
+
+#robo-left-eye {
+    margin-left: 7%;
+    float:  left;
+}
+#robo-right-eye {
+    margin-right: 7%;
+    float: right;
+
+    margin-top: 6%;
+}
+
+#query-wrapper, #response-wrapper {
+    height: 100%;
+    padding: 10% 12%;
+}
+#query, #response {
+    width: 80%;
+    height: 75%;
+    margin-left: 13%;
+    margin-top: 13%;
+
+    background-color: inherit;
+    border: 0em;
+
+    text-align: center;
+    font-family: 'Blue Highway';
+
+    overflow: hidden;
+}
