@@ -37,22 +37,26 @@ html, body {
     padding-top: 1.3%;
 }
 
-.robo-eye {
+.robo-scrn {
     width: 37%;
-    height: 45%;
+    height: 42%; /* should be effectively <50% to collapse well */
     border-radius: 20%;
     min-width: 11.3em;
 
     background-color: #fefefe;
     border-right: 1em solid #fafafa;
     border-bottom: 1em solid #fafafa;
+
+    position: relative; /* enable z-index */
+    z-index: 10;
 }
 
-#robo-left-eye {
+#robo-left-scrn {
+    margin-top: 3%;
     margin-left: 7%;
     float:  left;
 }
-#robo-right-eye {
+#robo-right-scrn {
     margin-right: 7%;
     float: right;
 
@@ -76,3 +80,24 @@ html, body {
 
     overflow: hidden;
 }
+
+#robo-buttons {
+    position: relative;
+    top: 64%;
+    left: -6em; /* = 0.1*max-left-body-border (matters when collapsing) */
+    height: 10%;
+    
+    white-space: nowrap;
+
+    z-index: 2; /* less that the scrns (10) */
+}
+.robo-button {
+    display: inline-block;
+    height: 100%;
+    width: 7%;
+    border-radius: 25%;
+}
+.robo-button-b { background-color: #0000dd; }
+.robo-button-g { background-color: #dd0000; }
+.robo-button-w { background-color: #ffffff; }
+.robo-button-y { background-color: #ffdf00; }

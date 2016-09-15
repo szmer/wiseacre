@@ -4,7 +4,7 @@ idle = true // idle state, when the robot has no meaningful response: show some 
 
 function adjustFont (target, resetTime) {
     var txt = target.value ? target.value : target.textContent
-    var fsize = (10/Math.log(txt.length+1)) * 0.7
+    var fsize = (10/Math.log(txt.length+1)) * 0.68
     // TODO maybe scale down a little on smaller screens
     target.style.fontSize = fsize + 'em'
 
