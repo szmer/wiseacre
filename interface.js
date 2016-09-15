@@ -1,4 +1,5 @@
-changeTime = NaN // store the time of the last change in query input
+// store the time of the last change in query input; reversed to NaN after each attempt to respond
+changeTime = NaN
 idle = true // idle state, when the robot has no meaningful response: show some animations
 
 function adjustFont (target, resetTime) {
@@ -31,22 +32,32 @@ function checkIdleInput () {
             document.getElementById('response').textContent = binaryAnim()
         })
 
-    if (isNaN(changeTime)) // NaN but no idle means that we're currently presenting a response
+    if (isNaN(changeTime)) // NaN but not idle means that we're currently presenting a response
         return
 
     if (Date.now() - changeTime > 2000) { // more than 2 seconds of user waiting with some input
+
+        // Block the animation.
+        idle = false
+
+        lock_screen = true
+
         changeTime = NaN
         var resp = generateResponse(ngr, document.getElementById('query').value)
 
-        if(resp) {
-            idle = false
-            document.getElementById('response').textContent = resp
-        }
+        if(resp)
+            requestAnimationFrame( function() {
+                document.getElementById('response').textContent = resp
+                adjustFont(document.getElementById('response'), false)
+            })
         else // can't find any words in ngram table
-            idle = true
+            requestAnimationFrame( function() {
+                idle = true // unlock the animation
 
-        // adjust font-size of the response
-        adjustFont(document.getElementById('response'), false)
+                // Start over the animation to have a text for resizing.
+                document.getElementById('response').textContent = binaryAnim()
+                adjustFont(document.getElementById('response'), false)
+            })
     }
 }
 
