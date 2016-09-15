@@ -29,6 +29,7 @@ html, body {
     border-top-left-radius: 10%;
     border-top-right-radius: 5%;
     border-bottom-right-radius: 7%;
+    border-bottom-left-radius: 0.2%;
 
     border-right: 5.6em solid #cccccc;
     border-top: 2.8em solid #cecece;
@@ -60,7 +61,6 @@ html, body {
 
 #query-wrapper, #response-wrapper {
     height: 100%;
-    padding: 10% 12%;
 }
 #query, #response {
     width: 80%;

@@ -27,7 +27,8 @@ function tests () {
     ])
     testFunc(movePunctuation, [
         "movePunctuation(', abba, cdda;') == ' , abba , cdda ;'",
-        "movePunctuation(',,, zyxyxy: yeah') == ' , , , zyxyxy : yeah'"
+        "movePunctuation(',,, zyxyxy: yeah') == ' , , , zyxyxy : yeah'",
+        "movePunctuation('... zyxyxy? yeah!') == ' . . . zyxyxy ? yeah !'"
     ])
     testFunc(updNGramEntry, [
         "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb'], 'forw', 0.1); 'bb' in o.forw",

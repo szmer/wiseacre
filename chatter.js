@@ -6,8 +6,8 @@ function emptyObj (obj) {
 
 function makeRoom (match) { return ' '+match }
 function strTrim (str) { return str.trim() }
-function movePunctuation (str) { return str.replace(/[,:;()]/g, makeRoom) }
-function alignPunctuation (str) { return str.replace(/ [,:;()]/g, strTrim)}
+function movePunctuation (str) { return str.replace(/[,.!?:;()]/g, makeRoom) }
+function alignPunctuation (str) { return str.replace(/ [,.!?:;()]/g, strTrim)}
 
 // repeat returns an array of the elem repeated times times.
 function repeat (elem, times) {
@@ -171,6 +171,7 @@ function cleanSentence(str) {
     return str.trim();
 }
 
+// generateSentence returns a sentence built around a word that is present in ngrams table.
 function generateSentence(ngrams, stemWord) {
     var sent = generateChain(ngrams, stemWord, 'backw', 20).reverse()
     sent = sent.concat( generateChain(ngrams, stemWord, 'forw', 20).slice(1) )
@@ -178,12 +179,16 @@ function generateSentence(ngrams, stemWord) {
     return cleanSentence(sent)
 }
 
-
+// generateResponse returns a response, given utterance, or false if it's unable to do so (i.e.
+// there is no known words in the utterance)
 function generateResponse(ngrams, utterance) {
     var tokens = tokenize(utterance)
     var stem_word = tokens[Math.floor(Math.random() * utterance.length)]
+    var counter = 0
     while (! (stem_word in ngr)) {
         stem_word = tokens[Math.floor(Math.random() * utterance.length)]
+        counter++
+        if (counter == 1000) return false
     }
     return generateSentence(ngrams, stem_word)
 }
@@ -198,7 +203,8 @@ function queryHandler(event) {
     document.getElementById('response').textContent = generateResponse(ngr, utterance)
 }
 
-ngr = Object()
-window.onload = function() {
+
+window.addEventListener('load', function() {
+    ngr = Object()
     ngr = nGrams(text, 6)
-}
+})
