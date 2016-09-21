@@ -84,7 +84,7 @@ function nGrams (textStr, n) {
     }
 
     // This is a probability unit that each word will receive for its one occurrence.
-    var probUnit =  1.0 / wordTotal
+    var probUnit =  1//.0 / wordTotal
 
     // Build the ngram chains from words of each sentence.
     for (var s in sent_tokens) {
@@ -100,10 +100,10 @@ function nGrams (textStr, n) {
     }
 
     // Normalize the probabilities of the embedded paths.
-    for (var k in ngrams) {
-        normalizeNGramEntry(ngrams[k], 'forw')
-        normalizeNGramEntry(ngrams[k], 'backw')
-    }
+    //for (var k in ngrams) {
+    //    normalizeNGramEntry(ngrams[k], 'forw')
+    //    normalizeNGramEntry(ngrams[k], 'backw')
+    //}
 
     return ngrams
 }
@@ -143,7 +143,7 @@ function generateChain (ngrams, word, direction, max_len) {
             nextEntry = ngrams[nextWord]
 
         nextWord = chooseNext(nextEntry, direction,
-                                   function(x){return x * (0.2+0.8*Math.random())})
+                              function(x){return x * Math.random()})
         nextEntry = nextEntry[direction][nextWord]
     }
     return chain
@@ -155,7 +155,7 @@ function cleanSentence(str) {
     for(var i = 0; i < str.length; i++) {
         var c = str.charAt(i)
         // Remove the punctuation that shouldn't appear at the beginning of a sentence.
-        if(',:;.'.indexOf(c) != -1) {
+        if(',:;.)'.indexOf(c) != -1) {
             str = str.substr(0, i) + str.substr(i+1)
             i --
         }
@@ -193,18 +193,43 @@ function generateResponse(ngrams, utterance) {
     return generateSentence(ngrams, stem_word)
 }
 
-function queryHandler(event) {
-    if (event.keyCode != 13) // 'enter'
-        return
-    var utterance = event.target.value
-    if (utterance == '')
-        return
-    // (ngr is global)
-    document.getElementById('response').textContent = generateResponse(ngr, utterance)
+// Return an array with tokens replaced with their Markov model neighbors.
+function invertTokens (ngrams, tokens) {
+    result = []
+    for (t in tokens) {
+        token = tokens[t]
+        entry = ngrams[token]
+        if (entry)
+            result = result.concat(Object.getOwnPropertyNames(entry.backw),
+                                   Object.getOwnPropertyNames(entry.forw))
+    }
+    return result
+}
+
+function queryHandler (ngr, utterance, scoreFunc) {
+    // we look for the lowest result of scoreFunc!
+    var respCandidates = []
+    for (var i = 0; i < 20; i++)
+        respCandidates.push(generateResponse(ngr, utterance))
+    var minScore = Infinity
+    var winnerResponse = []
+    var utteranceDist = makeDistribution(invertTokens(ngr, tokenize(utterance)))
+    for (var i = 0; i < respCandidates.length; i++) {
+        var respTokens = tokenize(respCandidates[i])
+        if (respTokens.length < 4) continue
+        var respDist = makeDistribution(invertTokens(ngr, respTokens))
+        var score = scoreFunc(utteranceDist, respDist)
+        if (score < minScore) {
+            winnerResponse = respCandidates[i]
+            minScore = score
+        }
+    }
+
+    return winnerResponse
 }
 
 
 window.addEventListener('load', function() {
     ngr = Object()
-    ngr = nGrams(text, 6)
+    ngr = nGrams(text, 3)
 })

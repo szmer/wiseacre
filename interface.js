@@ -43,7 +43,7 @@ function checkIdleInput () {
         lock_screen = true
 
         changeTime = NaN
-        var resp = generateResponse(ngr, document.getElementById('query').value)
+        var resp = queryHandler(ngr, document.getElementById('query').value, distrDifference)
 
         if(resp)
             requestAnimationFrame( function() {
