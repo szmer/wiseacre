@@ -7,9 +7,9 @@ function makeDistribution (tokens) {
     var d = new Distribution()
     d.msgLength = tokens.length
     for (var t in tokens) {
-        if (tokens[t] in d.freqs)
-            d.freqs[tokens[t]] ++
-        else
+        //if (tokens[t] in d.freqs)
+        //    d.freqs[tokens[t]] ++
+        //else
             d.freqs[tokens[t]] = 1
     }
     return d

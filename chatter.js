@@ -209,7 +209,7 @@ function invertTokens (ngrams, tokens) {
 function queryHandler (ngr, utterance, scoreFunc) {
     // we look for the lowest result of scoreFunc!
     var respCandidates = []
-    for (var i = 0; i < 20; i++)
+    for (var i = 0; i < 15; i++)
         respCandidates.push(generateResponse(ngr, utterance))
     var minScore = Infinity
     var winnerResponse = []
