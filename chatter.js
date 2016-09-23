@@ -100,10 +100,10 @@ function nGrams (textStr, n) {
     }
 
     // Normalize the probabilities of the embedded paths.
-    //for (var k in ngrams) {
-    //    normalizeNGramEntry(ngrams[k], 'forw')
-    //    normalizeNGramEntry(ngrams[k], 'backw')
-    //}
+    for (var k in ngrams) {
+        normalizeNGramEntry(ngrams[k], 'forw')
+        normalizeNGramEntry(ngrams[k], 'backw')
+    }
 
     return ngrams
 }
