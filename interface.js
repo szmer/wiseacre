@@ -1,6 +1,13 @@
+/* Whole global state goes here. */
 // store the time of the last change in query input; reversed to NaN after each attempt to respond
 changeTime = NaN
 idle = true // idle state, when the robot has no meaningful response: show some animations
+
+initAnimID = NaN // ID value of the interval function handling the init. animation
+//initAnimStep = 0 // 0-3, tells which character from sequence | / - \ should be used
+
+ngr = Object() // ngram object, made with NGrams(...)
+/* End of global state. */
 
 function adjustFont (target, resetTime) {
     var txt = target.value ? target.value : target.textContent
@@ -61,9 +68,12 @@ function checkIdleInput () {
     }
 }
 
+// It makes sense to call this function AFTER the corpus is downloaded by AJAX.
+function initializeInterface (promptText) {
+    initialized = true
 
-// Prepare the query/response handling.
-window.addEventListener('load', function() {
+    document.getElementById('query').disabled = false
+    document.getElementById('query').textContent = promptText
     document.getElementById('query').oninput = function(e) { adjustFont(e.target, true) }
     adjustFont(document.getElementById('query'))
 
@@ -72,4 +82,45 @@ window.addEventListener('load', function() {
 
     // fires response generation and controls the idle antimation:
     window.setInterval(checkIdleInput, 400)
+}
+
+function doInitAnimation (waitText) {
+    return window.setInterval(function () {
+        requestAnimationFrame(function ()
+                              {
+//                                  var steps = [ '|', '/', '-', '\'' ]
+//                                  var frame = steps[initAnimStep] + ' ' + waitText +
+//                                      ' ' + steps[initAnimStep]
+                                  document.getElementById('response').textContent = waitText
+                                  adjustFont(document.getElementById('response'))
+                                  if (initAnimStep < 3)
+                                      initAnimStep ++
+                                  else
+                                      initAnimStep = 0
+                              })
+    }, 50)
+}
+
+// Prepare the query/response handling.
+window.addEventListener('load', function() {
+    // Local variables (depending on language version).
+    var corpusFile = 'nkjp-sel.js'
+    var waitText = 'Uruchamiam się!'
+    var promptText = 'Napisz coś w tym polu i daj mi chwilę na namysł'
+    var siteTitle = 'Porozmawiaj z Mundrusiem'
+
+    document.title = siteTitle
+    initAnimID = doInitAnimation(waitText)
+
+    xhttp = new XMLHttpRequest()
+    xhttp.open('GET', corpusFile, true)
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var text = this.responseText
+            ngr = nGrams(text, 3)
+            window.clearInterval(initAnimID)
+            initializeInterface(promptText)
+        }
+    }
+    xhttp.send()
 })

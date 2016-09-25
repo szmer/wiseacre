@@ -227,9 +227,3 @@ function queryHandler (ngr, utterance, scoreFunc) {
 
     return winnerResponse
 }
-
-
-window.addEventListener('load', function() {
-    ngr = Object()
-    ngr = nGrams(text, 3)
-})
