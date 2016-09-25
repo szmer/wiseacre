@@ -52,7 +52,7 @@ function checkIdleInput () {
         changeTime = NaN
         var resp = queryHandler(ngr, document.getElementById('query').value, distrDifference)
 
-        if(resp)
+        if(resp && resp.length > 1)
             requestAnimationFrame( function() {
                 document.getElementById('response').textContent = resp
                 adjustFont(document.getElementById('response'), false)
@@ -93,10 +93,10 @@ function doInitAnimation (waitText) {
 //                                      ' ' + steps[initAnimStep]
                                   document.getElementById('response').textContent = waitText
                                   adjustFont(document.getElementById('response'))
-                                  if (initAnimStep < 3)
-                                      initAnimStep ++
-                                  else
-                                      initAnimStep = 0
+//                                  if (initAnimStep < 3)
+//                                      initAnimStep ++
+//                                  else
+//                                      initAnimStep = 0
                               })
     }, 50)
 }

@@ -108,6 +108,13 @@ function nGrams (textStr, n) {
     return ngrams
 }
 
+// randomWord returns a random word drawn from the ngrams table.
+function randomWord(ngrams) {
+    var len = Object.keys(ngrams).length
+    var key = Object.keys(ngrams)[Math.round(Math.random() * len)]
+    return key
+}
+
 // chooseNext returns a key (word form) of the node leading in the desired direction which has the
 // highest value of the evaluateFunc (when applied to its prob property), The function returns an
 // empty string if the ngramEntry has no descendants.
@@ -184,12 +191,18 @@ function generateSentence(ngrams, stemWord) {
 function generateResponse(ngrams, utterance) {
     var tokens = tokenize(utterance)
     var stem_word = tokens[Math.floor(Math.random() * utterance.length)]
-    var counter = 0
-    while (! (stem_word in ngr)) {
-        stem_word = tokens[Math.floor(Math.random() * utterance.length)]
-        counter++
-        if (counter == 1000) return false
+
+    if (stem_word && !(stem_word in ngr)) {
+        if (stem_word.toLocaleLowerCase() in ngr)
+            stem_word = stem_word.toLocaleLowerCase()
     }
+    if (!stem_word || !(stem_word in ngr) || stem_word.length == 0) {
+        if(Math.random() < 0.85)
+            return false
+        else
+            stem_word = randomWord(ngr)
+    }
+
     return generateSentence(ngrams, stem_word)
 }
 
@@ -214,7 +227,9 @@ function queryHandler (ngr, utterance, scoreFunc) {
     var minScore = Infinity
     var winnerResponse = []
     var utteranceDist = makeDistribution(invertTokens(ngr, tokenize(utterance)))
+    utteranceDist.msgLength += 1 // just in case it was zero
     for (var i = 0; i < respCandidates.length; i++) {
+        if (!respCandidates[i]) continue
         var respTokens = tokenize(respCandidates[i])
         if (respTokens.length < 4) continue
         var respDist = makeDistribution(invertTokens(ngr, respTokens))
