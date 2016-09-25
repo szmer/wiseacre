@@ -7,6 +7,9 @@ initAnimID = NaN // ID value of the interval function handling the init. animati
 //initAnimStep = 0 // 0-3, tells which character from sequence | / - \ should be used
 
 ngr = Object() // ngram object, made with NGrams(...)
+
+humanName = '' // used for logging
+machineName = ''
 /* End of global state. */
 
 function adjustFont (target, resetTime) {
@@ -50,12 +53,17 @@ function checkIdleInput () {
         lock_screen = true
 
         changeTime = NaN
-        var resp = queryHandler(ngr, document.getElementById('query').value, distrDifference)
+        var utterance = document.getElementById('query').value
+        var resp = queryHandler(ngr, utterance, distrDifference)
+
+        if (utterance && utterance.trim().length > 0)
+            document.getElementById('log').innerHTML += '<strong>'+humanName+'</strong>: '+utterance+'<br>'
 
         if(resp && resp.length > 1)
             requestAnimationFrame( function() {
                 document.getElementById('response').textContent = resp
                 adjustFont(document.getElementById('response'), false)
+                document.getElementById('log').innerHTML += '<strong>'+machineName+'</strong>: '+resp+'<br>'
             })
         else // can't find any words in ngram table
             requestAnimationFrame( function() {
@@ -108,6 +116,8 @@ window.addEventListener('load', function() {
     var waitText = 'Uruchamiam się!'
     var promptText = 'Napisz coś w tym polu i daj mi chwilę na namysł'
     var siteTitle = 'Porozmawiaj z Mundrusiem'
+    humanName = 'Człowiek'
+    machineName = 'Mundruś'
 
     document.title = siteTitle
     initAnimID = doInitAnimation(waitText)

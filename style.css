@@ -7,7 +7,7 @@ html, body {
 
 @font-face {
         font-family: 'Blue Highway';
-        src: url(blue highway d.ttf);
+        src: url(blue_highway.ttf);
 }
 #sky-above {
     /* flexibly adjust the div leaving some air for the machine box */
@@ -19,10 +19,13 @@ html, body {
     background-color: #BFEFFF;
 }
 
-#robo-body {
+#robo-body, #log {
     margin-left: 12%;
     width: 76%;
     max-width: 60em;
+}
+
+#robo-body {
     height: 67%;
     min-height: 28em;
 
@@ -110,4 +113,20 @@ html, body {
     margin-left: 64%;
     margin-top: 8%;
     width: 27%;
+}
+
+#log {
+    background-color: #e7e7e0;
+    color: #080808;
+
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-right: 2em;
+    padding: 1.3em;
+    font-family: 'Blue Highway', 'sans-serif';
+    font-size: 1.1em;
+
+    border-radius: 1.3em;
+    border-left: 2em solid #daead4;
+    border-right: 2em solid #daead4;
 }
