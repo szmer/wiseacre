@@ -1,4 +1,20 @@
 /* Whole global state goes here. */
+langs = {'pl': {
+		'corpusFile': 'nkjp-sel.js',
+		'waitText': 'Uruchamiam się!',
+		'promptText': 'Napisz coś w tym polu i daj mi chwilę na namysł',
+		'siteTitle': 'Porozmawiaj z Mundrusiem',
+		'humanName': 'Człowiek',
+		'machineName': 'Mundruś'},
+		'en': {
+		'corpusFile': 'eng-corpus.js',
+		'waitText': 'Getting ready!',
+		'promptText': 'Type something here and let me think about the answer',
+		'siteTitle': 'Chat with the Wiseacre',
+		'humanName': 'Human',
+		'machineName': 'Wiseacre'}}
+lang = 'en'
+
 // store the time of the last change in query input; reversed to NaN after each attempt to respond
 changeTime = NaN
 idle = true // idle state, when the robot has no meaningful response: show some animations
@@ -7,9 +23,6 @@ initAnimID = NaN // ID value of the interval function handling the init. animati
 //initAnimStep = 0 // 0-3, tells which character from sequence | / - \ should be used
 
 ngr = Object() // ngram object, made with NGrams(...)
-
-humanName = '' // used for logging
-machineName = ''
 /* End of global state. */
 
 function adjustFont (target, resetTime) {
@@ -57,13 +70,13 @@ function checkIdleInput () {
         var resp = queryHandler(ngr, utterance, distrDifference)
 
         if (utterance && utterance.trim().length > 0)
-            document.getElementById('log').innerHTML += '<strong>'+humanName+'</strong>: '+utterance+'<br>'
+            document.getElementById('log').innerHTML += '<strong>'+langs[lang].humanName+'</strong>: '+utterance+'<br>'
 
         if(resp && resp.length > 1)
             requestAnimationFrame( function() {
                 document.getElementById('response').textContent = resp
                 adjustFont(document.getElementById('response'), false)
-                document.getElementById('log').innerHTML += '<strong>'+machineName+'</strong>: '+resp+'<br>'
+                document.getElementById('log').innerHTML += '<strong>'+langs[lang].machineName+'</strong>: '+resp+'<br>'
             })
         else // can't find any words in ngram table
             requestAnimationFrame( function() {
@@ -111,25 +124,17 @@ function doInitAnimation (waitText) {
 
 // Prepare the query/response handling.
 window.addEventListener('load', function() {
-    // Local variables (depending on language version).
-    var corpusFile = 'nkjp-sel.js'
-    var waitText = 'Uruchamiam się!'
-    var promptText = 'Napisz coś w tym polu i daj mi chwilę na namysł'
-    var siteTitle = 'Porozmawiaj z Mundrusiem'
-    humanName = 'Człowiek'
-    machineName = 'Mundruś'
-
-    document.title = siteTitle
-    initAnimID = doInitAnimation(waitText)
+    document.title = langs[lang].siteTitle
+    initAnimID = doInitAnimation(langs[lang].waitText)
 
     xhttp = new XMLHttpRequest()
-    xhttp.open('GET', corpusFile, true)
+    xhttp.open('GET', langs[lang].corpusFile, true)
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var text = this.responseText
             ngr = nGrams(text, 3)
             window.clearInterval(initAnimID)
-            initializeInterface(promptText)
+            initializeInterface(langs[lang].promptText)
         }
     }
     xhttp.send()

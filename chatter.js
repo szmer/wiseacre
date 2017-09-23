@@ -1,4 +1,4 @@
-function emptyObj (obj) {
+gunction emptyObj (obj) {
     for (var k in obj)
         return false
     return true
@@ -197,7 +197,7 @@ function generateResponse(ngrams, utterance) {
             stem_word = stem_word.toLocaleLowerCase()
     }
     if (!stem_word || !(stem_word in ngr) || stem_word.length == 0) {
-        if(Math.random() < 0.85)
+        if(Math.random() < 0.94)
             return false
         else
             stem_word = randomWord(ngr)
