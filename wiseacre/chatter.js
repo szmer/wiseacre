@@ -37,15 +37,16 @@ function updNGramEntry (entry, tokens, direction, addProb) {
     }
 }
 
-// normalizeNGramEntry normalizes probabilities of the entry's descendants in the requested
-// direction, and invokes normalizeNGramEntry function for each of them.
-function normalizeNGramEntry (entry, direction) {
+// normalizeNGramNode normalizes probabilities of the node, and invokes normalizeNGramNode function
+// in each direction for its descendants.
+function normalizeNGramNode (node) {
     var nextTotal = 0.0
-    for (var k in entry[direction])
-        nextTotal += entry[direction][k].prob
-    for (var k in entry[direction]) {
-        entry[direction][k].prob /= nextTotal
-        normalizeNGramEntry(entry[direction][k], direction)
+    for (var k in node)
+        nextTotal += node[k].prob
+    for (var k in node) {
+        node[k].prob /= nextTotal
+        normalizeNGramNode(node[k].backw)
+        normalizeNGramNode(node[k].forw)
     }
 }
 
@@ -99,11 +100,8 @@ function nGrams (textStr, n) {
             updNGramEntry(ngrams[tokens[i]], tokens.slice(i-n+1, i+1).reverse(), 'backw', 0.0)
     }
 
-    // Normalize the probabilities of the embedded paths.
-    for (var k in ngrams) {
-        normalizeNGramEntry(ngrams[k], 'forw')
-        normalizeNGramEntry(ngrams[k], 'backw')
-    }
+    // Normalize path probabilities.
+	normalizeNGramNode(ngrams)
 
     return ngrams
 }

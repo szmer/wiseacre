@@ -39,11 +39,11 @@ function tests () {
         "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb'], 'forw', 0.1); updNGramEntry(o, ['aa', 'bb'], 'forw', 0.1); o.prob == 0.2",
         "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb', 'cc'], 'backw', 0.1); updNGramEntry(o, ['aa', 'bb', 'cc'], 'backw', 0.1); o.backw['bb'].backw['cc'].prob == 2.0",
     ])
-    testFunc(normalizeNGramEntry, [
-        "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb', 'cc'], 'backw', 0.1); updNGramEntry(o, ['aa', 'bb', 'dd'], 'backw', 0.1); normalizeNGramEntry(o, 'backw'); o.backw['bb'].backw['cc'].prob == 0.5 && o.backw['bb'].backw['dd'].prob == 0.5",
-        "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb', 'cc'], 'backw', 0.1); updNGramEntry(o, ['aa', 'bb', 'dd'], 'backw', 0.1); normalizeNGramEntry(o, 'backw'); o.backw['bb'].prob == 1.0",
-        "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb', 'cc'], 'backw', 0.1); updNGramEntry(o, ['aa', 'cc', 'dd'], 'backw', 0.1); normalizeNGramEntry(o, 'backw'); o.backw['bb'].prob == 0.5 && o.backw['bb'].backw['cc'].prob == 1.0",
-        "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb', 'cc'], 'backw', 0.1); updNGramEntry(o, ['aa', 'bb', 'dd'], 'backw', 0.1); normalizeNGramEntry(o, 'backw'); o.prob == 0.2",
+    testFunc(normalizeNGramNode, [
+        "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb', 'cc'], 'backw', 0.1); updNGramEntry(o, ['aa', 'bb', 'dd'], 'backw', 0.1); normalizeNGramNode(o.backw); o.backw['bb'].backw['cc'].prob == 0.5 && o.backw['bb'].backw['dd'].prob == 0.5",
+        "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb', 'cc'], 'backw', 0.1); updNGramEntry(o, ['aa', 'bb', 'dd'], 'backw', 0.1); normalizeNGramNode(o.backw); o.backw['bb'].prob == 1.0",
+        "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb', 'cc'], 'backw', 0.1); updNGramEntry(o, ['aa', 'cc', 'dd'], 'backw', 0.1); normalizeNGramNode(o.backw); o.backw['bb'].prob == 0.5 && o.backw['bb'].backw['cc'].prob == 1.0",
+        "var o = new NGramNode('aa'); updNGramEntry(o, ['aa', 'bb', 'cc'], 'backw', 0.1); updNGramEntry(o, ['aa', 'bb', 'dd'], 'backw', 0.1); normalizeNGramNode(o.backw); o.prob == 0.2",
     ])
     testFunc(nGrams, [
         "var o = new nGrams('zyxyxy telefax angh cdda', 3); (o['zyxyxy'].prob == 0.25)",
