@@ -128,7 +128,7 @@ window.addEventListener('load', function() {
     initAnimID = doInitAnimation(langs[lang].waitText)
 
     xhttp = new XMLHttpRequest()
-    xhttp.open('GET', langs[lang].corpusFile, true)
+    xhttp.open('GET', 'corpora/'+langs[lang].corpusFile, true)
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             var text = this.responseText

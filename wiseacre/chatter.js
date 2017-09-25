@@ -1,4 +1,4 @@
-gunction emptyObj (obj) {
+function emptyObj (obj) {
     for (var k in obj)
         return false
     return true

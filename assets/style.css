@@ -5,10 +5,6 @@ html, body {
     padding: 0em;
 }
 
-@font-face {
-        font-family: 'Blue Highway';
-        src: url(blue_highway.ttf);
-}
 #sky-above {
     /* flexibly adjust the div leaving some air for the machine box */
     height: 60em;
@@ -83,7 +79,7 @@ html, body {
     border: 0em;
 
     text-align: center;
-    font-family: 'Blue Highway', 'sans-serif';
+    font-family: 'sans-serif';
 
     overflow: hidden;
 }
@@ -123,7 +119,7 @@ html, body {
     margin-bottom: 1em;
     margin-right: 2em;
     padding: 1.3em;
-    font-family: 'Blue Highway', 'sans-serif';
+    font-family: 'sans-serif';
     font-size: 1.1em;
 
     border-radius: 1.3em;
