@@ -1,13 +1,13 @@
 /* Whole global state goes here. */
 langs = {'pl': {
-		'corpusFile': 'nkjp-sel.js',
+		'corpusFile': 'nkjp-sel.txt',
 		'waitText': 'Uruchamiam się!',
 		'promptText': 'Napisz coś w tym polu i daj mi chwilę na namysł',
 		'siteTitle': 'Porozmawiaj z Mundrusiem',
 		'humanName': 'Człowiek',
 		'machineName': 'Mundruś'},
 		'en': {
-		'corpusFile': 'eng-corpus.js',
+		'corpusFile': 'eng-corpus.txt',
 		'waitText': 'Getting ready!',
 		'promptText': 'Type something here and let me think about the answer',
 		'siteTitle': 'Chat with the Wiseacre',
